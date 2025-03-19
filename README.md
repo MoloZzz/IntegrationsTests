@@ -23,8 +23,9 @@ A "Mini Weather Shop" system:
 - **Storage**: SQLite (via TypeORM for Service-3), JSON for data exchange
 - **Dependencies**: `axios` (HTTP requests), `dotenv` (environment variables)
 
-## Setup Instructions
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd IntegrationsTests
+## Configuration Stack
+- **Service-1**: Використовує REST і JSON (зовнішній OpenWeather API повертає JSON).
+- **Service-2**: Використовує GraphQL і JSON (GraphQL зазвичай працює з JSON).
+- **Service-3**: Використовує REST і CSV (логи у вигляді таблиці).
+- **Service-4**: Використовує SOAP і XML (аналітика в стилі старіших систем).
+- **Service-5**: Використовує REST і plain text (сповіщення як простий текст).
