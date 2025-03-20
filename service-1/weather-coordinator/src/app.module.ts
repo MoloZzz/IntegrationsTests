@@ -13,7 +13,8 @@ import * as Joi from 'joi'
       envFilePath: [`.env`],
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
-        OPENWEATHER_API_URL: Joi.string().required(),
+        OPEN_WEATHER_API_CURRENT_WEATHER_URL: Joi.string().required(),
+        OPEN_WEATHER_API_KEY: Joi.string().required(),
       }),
   }),
   ],

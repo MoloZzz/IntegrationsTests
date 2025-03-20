@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import config from '../../../config'
 
+const openWeatherConfig = config().openApiIntegration;
 
 @Injectable()
 export class OpenWeatherService {
-    constructor(){
-        const mainUrl = `lat={lat}&lon={lon}&appid={API key}`
-    }
+    constructor(){}
 }

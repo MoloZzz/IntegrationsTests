@@ -7,6 +7,7 @@ dotenv.config({
 
 export default () => ({
     openApiIntegration: {
-        url: process.env.POSTGRES_HOST,
+        url: process.env.OPEN_WEATHER_API_URL,
+        apiKey: process.env.OPEN_WEATHER_API_KEY, 
     },
 });
