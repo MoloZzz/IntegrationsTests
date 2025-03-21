@@ -3,6 +3,7 @@ import config from '../../../config';
 import { IWeatherDataResponse } from 'src/common/interfaces';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
+import { temperatureUnitsEnum } from 'src/common/enums';
 
 const openWeatherConfig = config().openApiIntegration;
 
@@ -11,10 +12,12 @@ export class OpenWeatherService {
   private readonly indexURL: string;
   private readonly headers: string;
   private readonly apiKey: string;
+  private readonly lang: string;
 
   constructor(private readonly httpService: HttpService) {
     this.indexURL = openWeatherConfig.url;
     this.apiKey = openWeatherConfig.apiKey;
+    this.lang = openWeatherConfig.language;
   }
 
   public async getWeatherDataByCoordinates(
@@ -26,6 +29,8 @@ export class OpenWeatherService {
       const params = new URLSearchParams({
         lat: latitude,
         lon: longitude,
+        units: temperatureUnitsEnum.metric,
+        lang: this.lang,
         appid: this.apiKey,
       });
       console.log(params.toString());
