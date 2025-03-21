@@ -28,7 +28,7 @@ export class OpenWeatherService {
         lon: longitude,
         appid: this.apiKey,
       });
-      console.log(params.toString())
+      console.log(params.toString());
 
       const url: string = `${this.indexURL}?${params.toString()}`;
       const res: AxiosResponse<IWeatherDataResponse> =
@@ -36,7 +36,10 @@ export class OpenWeatherService {
 
       return res.data;
     } catch (error) {
-      console.error('Error OpenWeatherService.getWeatherDataByCoordinates:', error);
+      console.error(
+        'Error OpenWeatherService.getWeatherDataByCoordinates:',
+        error,
+      );
       throw new Error('Failed to fetch weather data');
     }
   }
