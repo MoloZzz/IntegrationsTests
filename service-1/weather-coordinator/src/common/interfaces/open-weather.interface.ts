@@ -49,3 +49,16 @@ export interface IWeatherDataResponse {
   name: string;
   cod: number;
 }
+
+export interface IWeatherLocationResponse {
+  name: string;
+  local_names?: {
+    [languageCode: string]: string;
+    ascii?: string;
+    feature_name?: string;
+  };
+  lat: string;
+  lon: string;
+  country: string;
+  state?: string;
+}
