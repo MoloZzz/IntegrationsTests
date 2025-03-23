@@ -1,4 +1,4 @@
-# Service-5 (Notifications Service)
+# Service-5 Notificator(Notification Service)
 
 ## **Опис**
 Service-5 відповідає за сповіщення в системі "Mini Weather Shop". Він отримує події від інших мікросервісів і надсилає сповіщення через різні канали:  

@@ -44,7 +44,7 @@ A "Mini Weather Shop" system:
 2. **Service-2 (Geographical Data Manager):** Stores city and coordinate data, allowing structured weather lookups.
 3. **Service-3 (Weather Logger):** Stores received data in a local database.
 4. **Service-4 (Weather Analyst):** Analyzes received data (e.g., calculating average temperatures for specific timeframes).
-5. **Service-5 (Notifier):** Sends notifications to users based on weather conditions.
+5. **Service-5 (Notificator):** Sends notifications to users based on weather conditions.
 
 ---
 
