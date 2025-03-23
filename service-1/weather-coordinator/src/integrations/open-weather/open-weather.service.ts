@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import config from '../../../config';
-import { ICoordinates, IWeatherDataResponse, IWeatherLocationResponse } from 'src/common/interfaces';
+import {
+  IWeatherDataResponse,
+  IWeatherLocationResponse,
+} from 'src/common/interfaces';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { temperatureUnitsEnum } from 'src/common/enums';
@@ -34,9 +37,9 @@ export class OpenWeatherService {
         appid: this.apiKey,
       });
 
-      const url: string = `${this.indexURL}?${params.toString()}`;
+      const url: string = `${this.indexURL}/data/2.5/weather?${params.toString()}`;
       const res: AxiosResponse<IWeatherDataResponse> =
-        await this.httpService.axiosRef.get<IWeatherDataResponse>(url);
+        await this.httpService.axiosRef.get<IWeatherDataResponse>(url); //можна не вказувати тип response
 
       return res.data;
     } catch (error) {
@@ -49,25 +52,23 @@ export class OpenWeatherService {
   }
 
   /**q - City name, state code (only for the US) and country code divided by comma. Please use ISO 3166 country codes.*/
-  public async getCoordinatesByCity(city: string): Promise<IWeatherLocationResponse> {
-    console.log('in OpenWeatherService.getCoordinatesByCity');
+  public async getGeocodingDataByCity(
+    city: string,
+  ): Promise<IWeatherLocationResponse[]> {
+    console.log('in OpenWeatherService.getGeocodingDataByCity');
     try {
       const params = new URLSearchParams({
         q: city,
         appid: this.apiKey,
       });
 
-      const url: string = `${this.indexURL}?${params.toString()}`;
-      const res: AxiosResponse<IWeatherLocationResponse> =
-        await this.httpService.axiosRef.get<IWeatherLocationResponse>(url);
-
+      const url: string = `${this.indexURL}/geo/1.0/direct?${params.toString()}`;
+      const res: AxiosResponse<IWeatherLocationResponse[]> =
+        await this.httpService.axiosRef.get<IWeatherLocationResponse[]>(url);
       return res.data;
     } catch (error) {
-      console.error(
-        'Error OpenWeatherService.getCoordinatesByCity:',
-        error,
-      );
+      console.error('Error OpenWeatherService.getGeocodingDataByCity:', error);
       throw new Error('Failed to fetch coordinates by city');
     }
-  } //TODO: test 
+  } //TODO: test
 }

@@ -1,4 +1,4 @@
-export interface ICoordinates{
-    latitude: string,
-    longitude: string,
+export interface ICoordinates {
+  lat: string;
+  lon: string;
 }
