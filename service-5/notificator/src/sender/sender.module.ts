@@ -6,6 +6,6 @@ import { TelegramModule } from 'src/integrations/telegram/telegram.module';
 @Module({
   imports: [TelegramModule],
   controllers: [SenderController],
-  providers: [SenderService]
+  providers: [SenderService],
 })
 export class SenderModule {}

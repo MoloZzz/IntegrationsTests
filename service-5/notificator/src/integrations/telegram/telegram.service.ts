@@ -70,7 +70,7 @@ export class TelegramService {
     );
   }
 
-  async sendMessageToUserByChatId(chatId: string, message: string){
+  async sendMessageToUserByChatId(chatId: string, message: string) {
     await this.bot.telegram.sendMessage(chatId, message);
   }
 }

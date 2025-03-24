@@ -7,7 +7,10 @@ export class SendTeleramMessage {
   @IsNotEmpty()
   chatId: string;
 
-  @ApiProperty({ example: 'Привіт, це повідомлення від бота!', description: 'Текст повідомлення' })
+  @ApiProperty({
+    example: 'Привіт, це повідомлення від бота!',
+    description: 'Текст повідомлення',
+  })
   @IsString()
   @IsNotEmpty()
   message: string;

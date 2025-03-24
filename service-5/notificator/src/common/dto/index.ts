@@ -1,1 +1,1 @@
-export * from './telegram.dto'
+export * from './telegram.dto';
