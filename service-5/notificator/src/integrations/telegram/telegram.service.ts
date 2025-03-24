@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class TelegramService {
@@ -16,7 +16,7 @@ export class TelegramService {
 
   private initListeners() {
     this.bot.start(async (ctx) => {
-      const chatId = ctx.chat.id;
+      const chatId = String(ctx.chat.id);
       this.logger.log(`User ${chatId} started bot`);
 
       await this.prisma.user.upsert({
@@ -29,7 +29,7 @@ export class TelegramService {
     });
 
     this.bot.on('text', async (ctx) => {
-      const chatId = ctx.chat.id;
+      const chatId = String(ctx.chat.id);
       const region = ctx.message.text;
 
       await this.prisma.user.update({
