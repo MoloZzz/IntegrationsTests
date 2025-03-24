@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SenderService } from './sender.service';
-import { SendTeleramMessage } from 'src/common/dto';
+import { SendTeleramMessage } from 'src/common';
 
 @ApiTags('Send message API')
 @Controller('sender')

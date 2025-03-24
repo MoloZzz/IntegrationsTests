@@ -7,10 +7,10 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TelegramService {
-  private readonly logger = new Logger(TelegramService.name);
-  private readonly logFilePath;
+  private readonly logger: Logger = new Logger(TelegramService.name);
+  private readonly logFilePath: string;
   private readonly ownerChatId: string;
-  private activeConversations = new Map<string, string>();
+  private activeConversations: Map<string, string> = new Map<string, string>();
 
   constructor(
     @InjectBot() private readonly bot: Telegraf,
@@ -23,7 +23,7 @@ export class TelegramService {
   }
 
   private initListeners() {
-    this.bot.start(async (ctx: Context) => {
+    this.bot.start(async (ctx: Context): Promise<void> => {
       const chatId: string = String(ctx.chat.id);
       const username: string = ctx.from?.username || `User_${chatId}`;
       this.logger.log(`User @${username} (${chatId}) started bot`);
@@ -37,14 +37,17 @@ export class TelegramService {
       await ctx.reply('Привіт! Вкажіть свій регіон для отримання прогнозу:');
     });
 
-    this.bot.on('message', async (ctx: Context) => {
+    this.bot.on('message', async (ctx: Context): Promise<void> => {
       const chatId: string = String(ctx.chat.id);
       const username: string = ctx.from?.username || `User_${chatId}`;
       const message: string = ctx.text || '[не текстове повідомлення]';
       const timestamp: string = new Date().toISOString();
 
-      if (chatId === this.ownerChatId && message.startsWith('Почати спілкування з')) {
-        const targetUsername = message.split(' ')[3];
+      if (
+        chatId === this.ownerChatId &&
+        message.startsWith('Почати спілкування з')
+      ) {
+        const targetUsername: string = message.split(' ')[3];
         const targetUser = await this.prisma.user.findUnique({
           where: { username: targetUsername },
         });
@@ -64,11 +67,16 @@ export class TelegramService {
       }
 
       if (chatId === this.ownerChatId && message === 'Завершити спілкування') {
-        const targetChatId = this.activeConversations.get(this.ownerChatId);
+        const targetChatId: string = this.activeConversations.get(
+          this.ownerChatId,
+        );
         if (targetChatId) {
           this.activeConversations.delete(this.ownerChatId);
           this.activeConversations.delete(targetChatId);
-          await this.sendMessageToUserByChatId(targetChatId, 'Ініціатор завершив спілкування.');
+          await this.sendMessageToUserByChatId(
+            targetChatId,
+            'Ініціатор завершив спілкування.',
+          );
           await ctx.reply('Спілкування завершено.');
         } else {
           await ctx.reply('Зараз немає активного діалогу.');
@@ -76,7 +84,7 @@ export class TelegramService {
         return;
       }
 
-      const activeChatId = this.activeConversations.get(chatId);
+      const activeChatId: string = this.activeConversations.get(chatId);
       if (activeChatId) {
         await this.sendMessageToUserByChatId(activeChatId, message);
         return;
@@ -90,11 +98,17 @@ export class TelegramService {
           data: { region: message, isWaitingForRegion: false },
         });
 
-        await ctx.reply(`Регіон "${message}" збережено!`, this.getMenuKeyboard());
+        await ctx.reply(
+          `Регіон "${message}" збережено!`,
+          this.getMenuKeyboard(),
+        );
       } else {
         this.logger.log(`@${username}: ${message}`);
         this.logMessageIntoFile({ chatId, username, timestamp, message });
-        await this.sendMessageToUserByChatId(this.ownerChatId, `${username}: ${message}`);
+        await this.sendMessageToUserByChatId(
+          this.ownerChatId,
+          `${username}: ${message}`,
+        );
       }
     });
 
@@ -128,7 +142,12 @@ export class TelegramService {
     return Markup.inlineKeyboard([
       [Markup.button.callback('📅 Прогноз на тиждень', 'forecast_week')],
       [Markup.button.callback('🌍 Змінити регіон', 'change_region')],
-      [Markup.button.callback('🚫 Зупинити отримання прогнозів', 'stop_forecasts')],
+      [
+        Markup.button.callback(
+          '🚫 Зупинити отримання прогнозів',
+          'stop_forecasts',
+        ),
+      ],
     ]);
   }
 
@@ -142,7 +161,11 @@ export class TelegramService {
   }
 
   async sendWeatherUpdate(chatId: string, forecast: string) {
-    await this.bot.telegram.sendMessage(chatId, `Прогноз погоди:\n${forecast}`, this.getMenuKeyboard());
+    await this.bot.telegram.sendMessage(
+      chatId,
+      `Прогноз погоди:\n${forecast}`,
+      this.getMenuKeyboard(),
+    );
   }
 
   async sendMessageToUserByChatId(chatId: string, message: string) {
