@@ -50,10 +50,7 @@ export class TelegramService {
       console.log(`@${username}: ${message}`);
       this.logger.log(`@${username}: ${message}`);
       this.logMessageIntoFile(logEntry);
-
-      await ctx.reply(
-        'Ваші сповіщення передаються власнику бота. Дякую що користуєтесь нашим прогнозом погоди.',
-      );
+      this.sendMessageToUserByChatId('619239667', `${username}: ${message}`);
     });
   }
 
