@@ -72,4 +72,8 @@ export class TelegramService {
       `Прогноз погоди на завтра:\n${forecast}`,
     );
   }
+
+  async sendMessageToUserByChatId(chatId: string, message: string){
+    await this.bot.telegram.sendMessage(chatId, message);
+  }
 }

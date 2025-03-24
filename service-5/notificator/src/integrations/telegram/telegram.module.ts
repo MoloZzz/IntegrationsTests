@@ -15,5 +15,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
     }),
   ],
   providers: [TelegramService, PrismaService],
+  exports: [TelegramService],
 })
 export class TelegramModule {}
