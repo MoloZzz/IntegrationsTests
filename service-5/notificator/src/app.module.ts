@@ -20,6 +20,7 @@ import * as Joi from 'joi';
         TELEGRAM_BOT_TOKEN: Joi.string().required(),
         DATABASE_URL: Joi.string().required(),
         API_DOCS_ENABLED: Joi.string().optional(),
+        LOG_FILE_PATH: Joi.string().required(),
       }),
     }),
     UserModule,
