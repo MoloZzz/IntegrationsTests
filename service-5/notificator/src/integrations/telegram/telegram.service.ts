@@ -10,6 +10,7 @@ export class TelegramService {
   private readonly logger = new Logger(TelegramService.name);
   private readonly logFilePath;
   private readonly ownerChatId: string;
+  private activeConversations = new Map<string, string>();
 
   constructor(
     @InjectBot() private readonly bot: Telegraf,
@@ -29,7 +30,7 @@ export class TelegramService {
 
       await this.prisma.user.upsert({
         where: { chatId },
-        update: { isWaitingForRegion: true },
+        update: { username, isWaitingForRegion: true },
         create: { chatId, username, isWaitingForRegion: true },
       });
 
@@ -41,6 +42,45 @@ export class TelegramService {
       const username: string = ctx.from?.username || `User_${chatId}`;
       const message: string = ctx.text || '[не текстове повідомлення]';
       const timestamp: string = new Date().toISOString();
+
+      if (chatId === this.ownerChatId && message.startsWith('Почати спілкування з')) {
+        const targetUsername = message.split(' ')[3];
+        const targetUser = await this.prisma.user.findUnique({
+          where: { username: targetUsername },
+        });
+
+        if (targetUser) {
+          this.activeConversations.set(this.ownerChatId, targetUser.chatId);
+          this.activeConversations.set(targetUser.chatId, this.ownerChatId);
+          await this.sendMessageToUserByChatId(
+            targetUser.chatId,
+            'Погода UA починає діалог',
+          );
+          await ctx.reply(`Розпочато спілкування з @${targetUsername}.`);
+        } else {
+          await ctx.reply(`Користувача @${targetUsername} не знайдено.`);
+        }
+        return;
+      }
+
+      if (chatId === this.ownerChatId && message === 'Завершити спілкування') {
+        const targetChatId = this.activeConversations.get(this.ownerChatId);
+        if (targetChatId) {
+          this.activeConversations.delete(this.ownerChatId);
+          this.activeConversations.delete(targetChatId);
+          await this.sendMessageToUserByChatId(targetChatId, 'Ініціатор завершив спілкування.');
+          await ctx.reply('Спілкування завершено.');
+        } else {
+          await ctx.reply('Зараз немає активного діалогу.');
+        }
+        return;
+      }
+
+      const activeChatId = this.activeConversations.get(chatId);
+      if (activeChatId) {
+        await this.sendMessageToUserByChatId(activeChatId, message);
+        return;
+      }
 
       const user = await this.prisma.user.findUnique({ where: { chatId } });
 
