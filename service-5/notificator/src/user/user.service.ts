@@ -13,6 +13,10 @@ export class UserService {
     return this.prisma.user.findUnique({ where: { chatId } });
   }
 
+  async findUserByUsername(username: string) {
+    return this.prisma.user.findUnique({ where: { username } });
+  }
+
   async upsertUser(chatId: string, username: string) {
     return this.prisma.user.upsert({
       where: { chatId },
