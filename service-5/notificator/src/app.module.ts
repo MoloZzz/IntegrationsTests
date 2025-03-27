@@ -7,6 +7,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { SenderModule } from './sender/sender.module';
+import { ViberModule } from './integrations/viber/viber.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -26,6 +27,7 @@ import * as Joi from 'joi';
     }),
     UserModule,
     SenderModule,
+    ViberModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
